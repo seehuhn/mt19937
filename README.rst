@@ -52,7 +52,7 @@ help, either on godoc.org_ or on the command line::
 
 The class ``MT19937`` represents instances of the Mersenne Twister.
 New instances can be allocated using the ``mt19937.New()`` function.
-A seed can be set using the .Seed() or .SeedFromArray() methods.
+A seed can be set using the .Seed() or .SeedFromSlice() methods.
 ``MT19937`` implements the ``rand.Source`` interface from the
 ``math/rand`` package.  Typically the PRNG is wrapped in a rand.Rand
 object as in the following example::
