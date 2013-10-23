@@ -362,7 +362,7 @@ var expected = []uint64{
 
 func TestMT19936(t *testing.T) {
 	mt := New()
-	mt.SeedFromArray([]uint64{0x12345, 0x23456, 0x34567, 0x45678})
+	mt.SeedFromSlice([]uint64{0x12345, 0x23456, 0x34567, 0x45678})
 	for i, want := range expected {
 		have := mt.Uint64()
 		if have != want {
