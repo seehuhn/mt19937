@@ -17,6 +17,9 @@
 package mt19937
 
 import (
+	"bytes"
+	"encoding/binary"
+	"io"
 	"math/rand"
 	"testing"
 )
@@ -371,6 +374,31 @@ func TestMT19936(t *testing.T) {
 	}
 }
 
+func TestMT19936Reader(t *testing.T) {
+	expectedBytes := &bytes.Buffer{}
+	for _, val := range expected {
+		binary.Write(expectedBytes, binary.LittleEndian, val)
+	}
+
+	// Use a length which is not a multiple of 8 bytes to test all of
+	// the code in MT19937.Read().
+	n := expectedBytes.Len() - 1
+
+	mt := New()
+	mt.SeedFromSlice([]uint64{0x12345, 0x23456, 0x34567, 0x45678})
+	generatedBytes := make([]byte, n)
+	nOut, err := mt.Read(generatedBytes)
+	if nOut != n {
+		t.Errorf("Read returned wrong length: expected %d, got %d", n, nOut)
+	}
+	if err != nil {
+		t.Error("Read error", err)
+	}
+	if bytes.Compare(generatedBytes, expectedBytes.Bytes()[:n]) != 0 {
+		t.Error("Wrong output")
+	}
+}
+
 func BenchmarkMT19937Uint64(b *testing.B) {
 	mt := New()
 	b.SetBytes(8)
@@ -389,6 +417,16 @@ func BenchmarkMT19937Int63(b *testing.B) {
 	}
 }
 
+func BenchmarkMT19937Read1k(b *testing.B) {
+	mt := New()
+	buffer := make([]byte, 1024)
+	b.SetBytes(1024)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		mt.Read(buffer)
+	}
+}
+
 func BenchmarkBuiltinInt63(b *testing.B) {
 	rng := rand.NewSource(1)
 	b.SetBytes(8)
@@ -400,3 +438,6 @@ func BenchmarkBuiltinInt63(b *testing.B) {
 
 // Compile time test: MT19937 implements the math.Source interface.
 var _ rand.Source = &MT19937{}
+
+// Compile time test: MT19937 implements the io.Reader interface.
+var _ io.Reader = &MT19937{}
