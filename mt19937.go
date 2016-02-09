@@ -43,6 +43,7 @@ type MT19937 struct {
 
 // New allocates a new instance of the 64bit Mersenne Twister.
 // A seed can be set using the .Seed() or .SeedFromSlice() methods.
+// If no seed is set explicitly, a default seed is used instead.
 func New() *MT19937 {
 	res := &MT19937{
 		state: make([]uint64, n),
