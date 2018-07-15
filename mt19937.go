@@ -102,7 +102,8 @@ func (mt *MT19937) SeedFromSlice(key []uint64) {
 
 // Uint64 generates a (pseudo-)random 64bit value.  The output can be
 // used as a replacement for a sequence of independent, uniformly
-// distributed samples in the range 0, 1, ..., 2^64-1.
+// distributed samples in the range 0, 1, ..., 2^64-1.  This method is
+// part of the rand.Source64 interface.
 func (mt *MT19937) Uint64() uint64 {
 	x := mt.state
 	if mt.index >= n {

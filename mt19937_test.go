@@ -436,8 +436,11 @@ func BenchmarkBuiltinInt63(b *testing.B) {
 	}
 }
 
-// Compile time test: MT19937 implements the math.Source interface.
+// Compile time test: MT19937 implements the rand.Source interface.
 var _ rand.Source = &MT19937{}
+
+// Compile time test: MT19937 implements the rand.Source64 interface.
+var _ rand.Source64 = &MT19937{}
 
 // Compile time test: MT19937 implements the io.Reader interface.
 var _ io.Reader = &MT19937{}
