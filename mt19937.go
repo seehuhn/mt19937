@@ -166,24 +166,24 @@ func (mt *MT19937) Int63() int64 {
 // the io.Reader interface.  The returned length `n` always equals
 // `len(p)` and `err` is always nil.
 func (mt *MT19937) Read(p []byte) (n int, err error) {
-	for n+8 <= len(p) {
+	n = len(p)
+	for len(p) >= 8 {
 		val := mt.Uint64()
-		p[n] = byte(val)
-		p[n+1] = byte(val >> 8)
-		p[n+2] = byte(val >> 16)
-		p[n+3] = byte(val >> 24)
-		p[n+4] = byte(val >> 32)
-		p[n+5] = byte(val >> 40)
-		p[n+6] = byte(val >> 48)
-		p[n+7] = byte(val >> 56)
-		n += 8
+		p[0] = byte(val)
+		p[1] = byte(val >> 8)
+		p[2] = byte(val >> 16)
+		p[3] = byte(val >> 24)
+		p[4] = byte(val >> 32)
+		p[5] = byte(val >> 40)
+		p[6] = byte(val >> 48)
+		p[7] = byte(val >> 56)
+		p = p[8:]
 	}
-	if n < len(p) {
+	if len(p) > 0 {
 		val := mt.Uint64()
-		for n < len(p) {
-			p[n] = byte(val)
+		for i := 0; i < len(p); i++ {
+			p[i] = byte(val)
 			val >>= 8
-			n++
 		}
 	}
 	return n, nil
