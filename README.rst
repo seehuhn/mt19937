@@ -59,6 +59,11 @@ object as in the following example::
     rng := rand.New(mt19937.New())
     rng.Seed(time.Now().UnixNano())
 
+Note that MT19937 is not safe for concurrent accesss by different
+goroutines.  If more than one goroutine accesses the PRNG, the callers
+must synchronise access using sync.Mutex or similar.
+
+
 Comparison to the Go Default PRNG
 ---------------------------------
 
