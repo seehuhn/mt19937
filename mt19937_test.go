@@ -394,7 +394,7 @@ func TestMT19936Reader(t *testing.T) {
 	if err != nil {
 		t.Error("Read error", err)
 	}
-	if bytes.Compare(generatedBytes, expectedBytes.Bytes()[:n]) != 0 {
+	if !bytes.Equal(generatedBytes, expectedBytes.Bytes()[:n]) {
 		t.Error("Wrong output")
 	}
 }
@@ -424,6 +424,19 @@ func BenchmarkMT19937Read1k(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		mt.Read(buffer)
+	}
+}
+
+func BenchmarkBuiltinUint64(b *testing.B) {
+	rng32 := rand.NewSource(1)
+	rng, ok := rng32.(rand.Source64)
+	if !ok {
+		b.Skip("rand.Source64 interface not supported")
+	}
+	b.SetBytes(8)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		rng.Uint64()
 	}
 }
 

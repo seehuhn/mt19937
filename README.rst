@@ -43,11 +43,11 @@ Usage
 -----
 
 Detailed usage instructions are available via the package's online
-help, either on godoc.org_ or on the command line::
+help, either on pkg.go.dev_ or on the command line::
 
     go doc github.com/seehuhn/mt19937
 
-.. _godoc.org: http://godoc.org/github.com/seehuhn/mt19937
+.. _pkg.go.dev: https://pkg.go.dev/github.com/seehuhn/mt19937
 
 The class ``MT19937`` represents instances of the Mersenne Twister.
 New instances can be allocated using the ``mt19937.New()`` function.
@@ -83,7 +83,7 @@ well-understood random number generator.  Relevant references include
      8, 1998, pages 3--30.
 
 The unit tests for the mt19937 package verify that the output of the
-Go implementation coincides with the output of the references
+Go implementation coincides with the output of the reference
 implementation.
 
 The mt19937 generator is slightly slower than the Go default PRNG.
@@ -91,17 +91,19 @@ A speed comparison can be performed using the following command::
 
     go test -bench=. github.com/seehuhn/mt19937
 
-On my (64bit) system I get the following results:
+On my laptop, using go version 1.15.5, I get the following results:
 
     +----------------+---------------+----------------+
     | method         | time per call |      thoughput |
     +================+===============+================+
-    | MT19937.Uint64 |  14.9 ns/op   |    537.48 MB/s |
+    | MT19937.Uint64 |  5.63 ns/op   |   1422.14 MB/s |
     +----------------+---------------+----------------+
-    | MT19937.Int63  |  15.0 ns/op   |    533.54 MB/s |
+    | MT19937.Int63  |  5.69 ns/op   |   1405.04 MB/s |
     +----------------+---------------+----------------+
-    | builtin Int63  |  11.9 ns/op   |    674.07 MB/s |
+    | builtin Uint64 |  4.05 ns/op   |   1973.47 MB/s |
+    +----------------+---------------+----------------+
+    | builtin Int63  |  4.15 ns/op   |   1929.62 MB/s |
     +----------------+---------------+----------------+
 
 This shows that, on my system, a call to the ``Int63()`` method of the
-built-in PRNG takes about 80% of the time that MT19937.Int63() takes.
+built-in PRNG takes about 73% of the time that MT19937.Int63() takes.
